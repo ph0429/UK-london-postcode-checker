@@ -1,0 +1,749 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Home Area Checker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #050708;
+      color: #f5f5f5;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    header {
+      padding: 1.5rem 2rem 1rem 2rem;
+      border-bottom: 1px solid #222;
+      background: radial-gradient(circle at top left, #1e293b 0, #020617 55%);
+    }
+
+    .title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin: 0 0 0.2rem 0;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #9ca3af;
+    }
+
+    main {
+      flex: 1;
+      padding: 1rem 2rem 2rem 2rem;
+      display: grid;
+      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      border-radius: 0.9rem;
+      padding: 1.1rem 1.2rem 1.2rem 1.2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+    }
+
+    .panel h2 {
+      margin: 0 0 0.75rem 0;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .input.row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: #d1d5db;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem 0.7rem;
+      border-radius: 0.6rem;
+      border: 1px solid #374151;
+      background-color: #020617;
+      color: #f9fafb;
+      font-size: 0.95rem;
+    }
+
+    input[type="text"]:focus {
+      outline: 2px solid #38bdf8;
+      outline-offset: 1px;
+      border-color: #38bdf8;
+    }
+
+    button {
+      margin-top: 0.4rem;
+      width: 100%;
+      padding: 0.55rem 0.7rem;
+      border: none;
+      border-radius: 0.6rem;
+      background: linear-gradient(to right, #22c55e, #16a34a);
+      color: #f9fafb;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .status {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: #9ca3af;
+      white-space: pre-line;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid #1f2937;
+      border-radius: 0.9rem;
+      padding: 0.85rem 0.95rem 0.95rem 0.95rem;
+      min-height: 0;
+    }
+
+    .card h3 {
+      margin: 0 0 0.55rem 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .muted {
+      color: #9ca3af;
+      font-size: 0.85rem;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 0.86rem;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      table-layout: fixed;
+      word-break: break-word;
+      white-space: normal;
+    }
+
+    .table th,
+    .table td {
+      padding: 0.3rem 0.35rem;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.95);
+      vertical-align: top;
+    }
+
+    .table th {
+      text-align: left;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .section-heading {
+      margin: 0.6rem 0 0.25rem 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #d1d5db;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <header>
+      <div class="title">Home Area Checker</div>
+      <div class="subtitle">Enter a UK postcode or full address to generate a full area profile</div>
+    </header>
+
+    <main>
+      <div class="panel">
+        <h2>Search</h2>
+        <div class="input row">
+          <label for="inputAddress">Postcode or Address</label>
+          <input id="inputAddress" type="text" placeholder="e.g. SW1A 1AA">
+          <button id="runBtn">Run Analysis</button>
+          <div id="status" class="status"></div>
+        </div>
+      </div>
+
+      <div id="report" class="panel" style="display:none">
+        <h2>Report</h2>
+
+        <div id="locationSection" class="card"></div>
+        <div id="imdSection" class="card"></div>
+
+        <div class="grid">
+          <div id="crimeSection" class="card"></div>
+          <div id="floodSection" class="card"></div>
+        </div>
+
+        <div class="grid">
+          <div id="schoolsSection" class="card"></div>
+          <div id="shopsSection" class="card"></div>
+          <div id="transportSection" class="card"></div>
+        </div>
+
+        <div id="airSection" class="card"></div>
+        <div id="censusSection" class="card"></div>
+        <div id="notesSection" class="card"></div>
+      </div>
+    </main>
+  </div>
+
+<script>
+  const statusBox = document.getElementById("status");
+  const runBtn = document.getElementById("runBtn");
+  const report = document.getElementById("report");
+
+  function setStatus(text) {
+    statusBox.textContent = text;
+  }
+
+  async function runAnalysis() {
+    const addr = document.getElementById("inputAddress").value.trim();
+    if (!addr) {
+      setStatus("Please enter an address.");
+      return;
+    }
+    setStatus("Processing…");
+    runBtn.disabled = true;
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/analyse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: addr })
+      });
+
+      if (!response.ok) {
+        setStatus("Error from server: " + response.status);
+        runBtn.disabled = false;
+        return;
+      }
+
+      const data = await response.json();
+      console.log("API response", data);
+      setStatus("Done.");
+      renderReport(data);
+      report.style.display = "block";
+
+    } catch (err) {
+      setStatus("Network error: " + err);
+    }
+
+    runBtn.disabled = false;
+  }
+
+  runBtn.addEventListener("click", runAnalysis);
+
+  function renderReport(data) {
+    try {
+      renderLocation(data.location);
+      renderIMD(data.imd);
+      renderCrime(data.crime);
+      renderFlood(data.flood);
+      renderSchools(data.schools);
+      renderShops(data.shops);
+      renderTransport(data.transport);
+      renderAir(data.air_quality);
+      renderCensus(data.census_2021);
+      renderNotes(data.notes);
+    } catch (e) {
+      setStatus("Render error: " + e);
+      console.error(e);
+    }
+  }
+
+  function escape(val) {
+    if (val === null || val === undefined) return "";
+    return String(val)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function renderLocation(loc) {
+    const box = document.getElementById("locationSection");
+    if (!loc) {
+      box.innerHTML = "<h3>Location</h3><div class='muted'>No data</div>";
+      return;
+    }
+    box.innerHTML =
+      "<h3>Location</h3>" +
+      "<div class='mono'>Postcode: " + escape(loc.postcode) + "</div>" +
+      "<div class='mono'>Latitude: " + escape(loc.latitude) + "</div>" +
+      "<div class='mono'>Longitude: " + escape(loc.longitude) + "</div>" +
+      "<div class='mono'>LSOA: " + escape(loc.lsoa_code) + "</div>" +
+      "<div class='mono'>MSOA: " + escape(loc.msoa) + "</div>" +
+      "<div class='mono'>District: " + escape(loc.admin_district) + "</div>" +
+      "<div class='mono'>Region: " + escape(loc.region) + "</div>";
+  }
+
+  function renderIMD(imd) {
+    const box = document.getElementById("imdSection");
+    if (!imd || !imd.scores) {
+      box.innerHTML = "<h3>IMD</h3><div class='muted'>No IMD data available</div>";
+      return;
+    }
+
+    let html = "<h3>Index of Multiple Deprivation</h3>";
+    html += "<div class='mono'>LSOA: " + escape(imd.lsoa_code) + "</div>";
+    html += "<div class='mono'>Name: " + escape(imd.lsoa_name) + "</div>";
+    html += "<table class='table'><tbody>";
+
+    for (const key in imd.scores) {
+      if (!Object.prototype.hasOwnProperty.call(imd.scores, key)) continue;
+      html += "<tr><td>" + escape(key) + "</td><td>" +
+        escape(imd.scores[key]) + "</td></tr>";
+    }
+
+    html += "</tbody></table>";
+    box.innerHTML = html;
+  }
+
+  function renderCrime(crime) {
+    const box = document.getElementById("crimeSection");
+
+    if (!crime) {
+      box.innerHTML = "<h3>Crime</h3><div class='muted'>No crime data.</div>";
+      return;
+    }
+
+    const raw = Array.isArray(crime.raw) ? crime.raw : [];
+    const summary = crime.summary || {};
+    let total = summary.total;
+    let byCat = summary.by_category || [];
+
+    if ((total === undefined || total === 0) && raw.length > 0) {
+      const counts = {};
+      for (const c of raw) {
+        const cat = (c.category || c.type || "unknown").toLowerCase();
+        counts[cat] = (counts[cat] || 0) + 1;
+      }
+      total = raw.length;
+      byCat = Object.entries(counts).map(([cat, count]) => ({
+        category: cat,
+        count,
+        percentage: (count / total) * 100.0
+      }));
+      byCat.sort((a, b) => b.count - a.count);
+    }
+
+    if (!total) {
+      box.innerHTML =
+        "<h3>Crime</h3><div class='muted'>No crime records returned for the latest month by the Police API.</div>";
+      return;
+    }
+
+    let html = "<h3>Crime</h3>";
+    html += "<div class='mono'>Total crimes: " + escape(total) + "</div>";
+
+    if (!byCat.length) {
+      html += "<div class='muted'>No breakdown by category.</div>";
+      box.innerHTML = html;
+      return;
+    }
+
+    html += "<table class='table'><thead><tr>" +
+      "<th>Category</th><th>Count</th><th>%</th></tr></thead><tbody>";
+
+    for (const item of byCat) {
+      const name = item.category || item.name;
+      const pct = typeof item.percentage === "number"
+        ? item.percentage.toFixed(1)
+        : "";
+      html += "<tr><td>" + escape(name) + "</td>" +
+        "<td>" + escape(item.count) + "</td>" +
+        "<td>" + (pct ? pct + "%" : "") + "</td></tr>";
+    }
+
+    html += "</tbody></table>";
+    box.innerHTML = html;
+  }
+
+  function renderFlood(flood) {
+    const box = document.getElementById("floodSection");
+
+    if (!flood || !Array.isArray(flood.warnings) || flood.warnings.length === 0) {
+      box.innerHTML = "<h3>Flood Risk</h3><div class='muted'>No current flood warnings within ten kilometres.</div>";
+      return;
+    }
+
+    let html = "<h3>Flood Risk</h3>";
+    for (const w of flood.warnings) {
+      html += "<div class='section-heading'>" + escape(w.severity || "Warning") + "</div>";
+      if (w.description) {
+        html += "<div class='mono'>" + escape(w.description) + "</div>";
+      }
+      if (w.message) {
+        html += "<div class='mono'>" + escape(w.message) + "</div>";
+      }
+      if (typeof w.distance_km === "number") {
+        html += "<div class='mono'>Distance: " + w.distance_km.toFixed(1) + " km</div>";
+      }
+      if (w.time_raised) {
+        html += "<div class='mono'>Raised: " + escape(w.time_raised) + "</div>";
+      }
+      if (w.time_severity_changed) {
+        html += "<div class='mono'>Updated: " + escape(w.time_severity_changed) + "</div>";
+      }
+      html += "<hr>";
+    }
+
+    box.innerHTML = html;
+  }
+
+  function renderSchools(schools) {
+    const box = document.getElementById("schoolsSection");
+
+    let list = [];
+    if (Array.isArray(schools)) {
+      list = schools;
+    } else if (schools && Array.isArray(schools.items)) {
+      list = schools.items;
+    }
+
+    if (!list.length) {
+      box.innerHTML = "<h3>Schools</h3><div class='muted'>No schools found within the search radius.</div>";
+      return;
+    }
+
+    list = list.slice().sort((a, b) => {
+      const da = typeof a.distance_km === "number" ? a.distance_km : Infinity;
+      const db = typeof b.distance_km === "number" ? b.distance_km : Infinity;
+      return da - db;
+    });
+
+    let html = "<h3>Schools</h3>";
+    html += "<div class='muted'>Showing schools within about one kilometre.</div>";
+
+    html += "<table class='table'><thead><tr>" +
+      "<th>Name</th><th>Distance</th><th>Phase</th><th>Ofsted overall</th>" +
+      "</tr></thead><tbody>";
+
+    const ofstedDetails = [];
+
+    for (const s of list.slice(0, 25)) {
+      const dist = typeof s.distance_km === "number"
+        ? s.distance_km.toFixed(2) + " km"
+        : "";
+      const phase = s.phase || s.school_phase || "";
+      const ofsted = s.ofsted || {};
+      const ofstedOverall =
+        ofsted["Overall effectiveness"] || ofsted.overall_effectiveness || "Not recorded";
+
+      const name = s.name || s.establishment_name || "School";
+
+      html += "<tr><td>" + escape(name) + "</td>" +
+        "<td>" + escape(dist) + "</td>" +
+        "<td>" + escape(phase) + "</td>" +
+        "<td>" + escape(ofstedOverall) + "</td></tr>";
+
+      ofstedDetails.push({ name, ofsted });
+    }
+
+    html += "</tbody></table>";
+
+    html += "<div class='section-heading'>Ofsted detail</div>";
+
+    const fields = [
+      "Overall effectiveness",
+      "Category of concern",
+      "Quality of education",
+      "Behaviour and attitudes",
+      "Personal development",
+      "Effectiveness of leadership and management",
+      "Safeguarding is effective?",
+      "Early years provision (where applicable)",
+      "Sixth form provision (where applicable)"
+    ];
+
+    for (const entry of ofstedDetails) {
+      const name = entry.name;
+      const ofsted = entry.ofsted || {};
+      html += "<div class='mono' style='margin-top:0.4rem;'>" + escape(name) + "</div>";
+      if (!ofsted || Object.keys(ofsted).length === 0) {
+        html += "<div class='muted'>No Ofsted record found for this school.</div>";
+        continue;
+      }
+      html += "<table class='table'><tbody>";
+      for (const field of fields) {
+        const value = ofsted[field] != null ? ofsted[field] : "";
+        html += "<tr><td>" + escape(field) + "</td><td>" + escape(value) + "</td></tr>";
+      }
+      html += "</tbody></table>";
+    }
+
+    box.innerHTML = html;
+  }
+
+  function renderShops(shops) {
+    const box = document.getElementById("shopsSection");
+
+    let items = [];
+    if (Array.isArray(shops)) {
+      items = shops;
+    } else if (shops && Array.isArray(shops.places)) {
+      items = shops.places;
+    }
+
+    if (!items.length) {
+      box.innerHTML = "<h3>Shops</h3><div class='muted'>No nearby grocery shops or supermarkets from OpenStreetMap query.</div>";
+      return;
+    }
+
+    const wantedShops = new Set([
+      "supermarket",
+      "convenience",
+      "grocery",
+      "greengrocer"
+    ]);
+
+    const filtered = [];
+    for (const s of items) {
+      const tags = s.tags || {};
+      const kind = tags.shop || tags.amenity || "";
+      if (!kind || !wantedShops.has(kind)) continue;
+      filtered.push(s);
+    }
+
+    let list = filtered.length ? filtered : items;
+
+    list = list.slice().sort((a, b) => {
+      const da = typeof a.distance_km === "number" ? a.distance_km : Infinity;
+      const db = typeof b.distance_km === "number" ? b.distance_km : Infinity;
+      return da - db;
+    });
+
+    const seen = new Set();
+    const unique = [];
+    for (const s of list) {
+      const name = (s.name || (s.tags && (s.tags.name || s.tags.shop)) || "").trim();
+      const key = name.toLowerCase();
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      unique.push(s);
+    }
+
+    if (!unique.length) {
+      box.innerHTML = "<h3>Shops</h3><div class='muted'>No nearby grocery shops or supermarkets from OpenStreetMap query.</div>";
+      return;
+    }
+
+    let html = "<h3>Shops</h3><ul>";
+    for (const s of unique.slice(0, 25)) {
+      const name = s.name || (s.tags && (s.tags.name || s.tags.shop)) || "Shop";
+      const distStr =
+        typeof s.distance_km === "number" ? " (" + s.distance_km.toFixed(2) + " km)" : "";
+      html += "<li class='mono'>" + escape(name) + escape(distStr) + "</li>";
+    }
+    if (unique.length > 25) {
+      html += "<li class='muted'>+" + escape(unique.length - 25) + " more…</li>";
+    }
+    html += "</ul>";
+
+    box.innerHTML = html;
+  }
+
+  function renderTransport(transport) {
+    const box = document.getElementById("transportSection");
+
+    let items = [];
+    if (Array.isArray(transport)) {
+      items = transport;
+    } else if (transport && Array.isArray(transport.nodes)) {
+      items = transport.nodes;
+    }
+
+    if (!items.length) {
+      box.innerHTML = "<h3>Transport</h3><div class='muted'>No nearby public transport nodes from OpenStreetMap query.</div>";
+      return;
+    }
+
+    items = items.slice().sort((a, b) => {
+      const da = typeof a.distance_km === "number" ? a.distance_km : Infinity;
+      const db = typeof b.distance_km === "number" ? b.distance_km : Infinity;
+      return da - db;
+    });
+
+    const seen = new Set();
+    const unique = [];
+    for (const t of items) {
+      let name = t.name || (t.tags && t.tags.name) || "";
+      if (!name) continue;
+      name = name.replace(/\s*\[platform\]\s*/i, "").trim();
+      const key = name.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      unique.push({ ...t, name });
+    }
+
+    let html = "<h3>Transport</h3><ul>";
+    for (const t of unique.slice(0, 25)) {
+      const name = t.name || (t.tags && (t.tags.name || t.tags.railway || t.tags.highway)) || "Stop";
+      const mode =
+        t.mode ||
+        (t.tags && (t.tags.public_transport || t.tags.railway || t.tags.highway)) ||
+        "";
+      const distStr =
+        typeof t.distance_km === "number" ? " " + t.distance_km.toFixed(2) + " km" : "";
+      html += "<li class='mono'>" + escape(name) +
+        (mode ? " [" + escape(mode) + "]" : "") +
+        escape(distStr) + "</li>";
+    }
+    if (unique.length > 25) {
+      html += "<li class='muted'>+" + escape(unique.length - 25) + " more…</li>";
+    }
+    html += "</ul>";
+
+    box.innerHTML = html;
+  }
+
+  function renderAir(air) {
+    const box = document.getElementById("airSection");
+
+    if (!air) {
+      box.innerHTML = "<h3>Air Quality</h3><div class='muted'>No air quality data.</div>";
+      return;
+    }
+
+    const site = air.site || air.nearest_site || null;
+    if (!site) {
+      box.innerHTML = "<h3>Air Quality</h3><div class='muted'>No nearby monitoring site found.</div>";
+      return;
+    }
+
+    let html = "<h3>Air Quality</h3>";
+    html += "<div class='mono'>Site: " + escape(site.name || site.SiteName || site.code) + "</div>";
+
+    if (typeof site.distance_km === "number") {
+      html += "<div class='mono'>Distance: " + site.distance_km.toFixed(2) + " km</div>";
+    }
+
+    const index = air.index || {};
+    const pollutants = index.pollutants || index.entries || [];
+
+    if (!Array.isArray(pollutants) || pollutants.length === 0) {
+      html += "<div class='muted'>No recent index values.</div>";
+      box.innerHTML = html;
+      return;
+    }
+
+    html += "<table class='table'><thead><tr>" +
+      "<th>Pollutant</th><th>Index</th><th>Band</th></tr></thead><tbody>";
+
+    for (const p of pollutants) {
+      const name = p.name || p.Pollutant || p.code;
+      html += "<tr><td>" + escape(name) + "</td>" +
+        "<td>" + escape(p.index || p.Index) + "</td>" +
+        "<td>" + escape(p.band || p.Band) + "</td></tr>";
+    }
+
+    html += "</tbody></table>";
+    box.innerHTML = html;
+  }
+
+  function renderCensus(census) {
+    const box = document.getElementById("censusSection");
+
+    if (!census || typeof census !== "object") {
+      box.innerHTML = "<h3>Census 2021</h3><div class='muted'>No Census data.</div>";
+      return;
+    }
+
+    let html = "<h3>Census 2021</h3>";
+
+    const categories = ["age", "ethnicity", "household", "occupation", "qualification", "religion"];
+    for (const key of categories) {
+      const entry = census[key];
+      html += "<div class='section-heading'>" +
+        key.charAt(0).toUpperCase() + key.slice(1) + "</div>";
+
+      if (!entry || !Array.isArray(entry.breakdown) || entry.breakdown.length === 0) {
+        html += "<div class='muted'>No data for this category.</div>";
+        continue;
+      }
+
+      html += "<table class='table'><thead><tr>" +
+        "<th>Label</th><th>Count</th><th>%</th></tr></thead><tbody>";
+
+      for (const row of entry.breakdown.slice(0, 25)) {
+        const pct = typeof row.percentage === "number" ? row.percentage.toFixed(1) : "";
+        html += "<tr><td>" + escape(row.label) + "</td>" +
+          "<td>" + escape(row.count) + "</td>" +
+          "<td>" + (pct ? pct + "%" : "") + "</td></tr>";
+      }
+
+      html += "</tbody></table>";
+    }
+
+    box.innerHTML = html;
+  }
+
+  function renderNotes(notes) {
+    const box = document.getElementById("notesSection");
+
+    if (!Array.isArray(notes) || notes.length === 0) {
+      box.innerHTML = "<h3>Notes</h3><div class='muted'>No additional notes recorded.</div>";
+      return;
+    }
+
+    let html = "<h3>Notes</h3><ul>";
+    for (const n of notes) {
+      html += "<li class='mono'>" + escape(n) + "</li>";
+    }
+    html += "</ul>";
+
+    box.innerHTML = html;
+  }
+</script>
+</body>
+</html>
