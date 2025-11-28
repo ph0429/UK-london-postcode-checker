@@ -265,7 +265,16 @@
       });
 
       if (!response.ok) {
-        setStatus("Error from server: " + response.status);
+        let msg = "Error from server: " + response.status;
+        try {
+          const errData = await response.json();
+          if (errData && errData.detail) {
+            msg = "Error: " + errData.detail;
+          }
+        } catch (e) {
+          // ignore JSON parse errors
+        }
+        setStatus(msg);
         runBtn.disabled = false;
         return;
       }
@@ -284,6 +293,11 @@
   }
 
   runBtn.addEventListener("click", runAnalysis);
+  document.getElementById("inputAddress").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      runAnalysis();
+    }
+  });
 
   function renderReport(data) {
     try {
@@ -323,7 +337,7 @@
       "<div class='mono'>Latitude: " + escape(loc.latitude) + "</div>" +
       "<div class='mono'>Longitude: " + escape(loc.longitude) + "</div>" +
       "<div class='mono'>LSOA: " + escape(loc.lsoa_code) + "</div>" +
-      "<div class='mono'>MSOA: " + escape(loc.msoa) + "</div>" +
+      "<div class='mono'>MSOA: " + escape(loc.msoa || "Not available") + "</div>" +
       "<div class='mono'>District: " + escape(loc.admin_district) + "</div>" +
       "<div class='mono'>Region: " + escape(loc.region) + "</div>";
   }
@@ -537,7 +551,7 @@
     }
 
     if (!items.length) {
-      box.innerHTML = "<h3>Shops</h3><div class='muted'>No nearby grocery shops or supermarkets from OpenStreetMap query.</div>";
+      box.innerHTML = "<h3>Shops</h3><div class='muted'>No nearby grocery shops or supermarkets returned. This can happen if OpenStreetMap is slow or temporarily unavailable. Try again in a minute.</div>";
       return;
     }
 
@@ -575,7 +589,7 @@
     }
 
     if (!unique.length) {
-      box.innerHTML = "<h3>Shops</h3><div class='muted'>No nearby grocery shops or supermarkets from OpenStreetMap query.</div>";
+      box.innerHTML = "<h3>Shops</h3><div class='muted'>No nearby grocery shops or supermarkets returned. This can happen if OpenStreetMap is slow or temporarily unavailable. Try again in a minute.</div>";
       return;
     }
 
@@ -605,7 +619,7 @@
     }
 
     if (!items.length) {
-      box.innerHTML = "<h3>Transport</h3><div class='muted'>No nearby public transport nodes from OpenStreetMap query.</div>";
+      box.innerHTML = "<h3>Transport</h3><div class='muted'>No nearby transport nodes returned. If this seems wrong, try again in a minute. OpenStreetMap sometimes times out.</div>";
       return;
     }
 
