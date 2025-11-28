@@ -5,21 +5,46 @@
   <meta charset="utf-8">
   <title>Home Area Checker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     :root {
-      color-scheme: dark;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color-scheme: light dark;
+      --bg: #f6f7f9;
+      --bg-panel: #ffffff;
+      --bg-card: #ffffff;
+      --bg-soft: #f1f5f9;
+      --text: #0b1220;
+      --text-muted: #5b6474;
+      --border: #d7dbe3;
+      --accent: #0ea5e9;
+      --accent-2: #16a34a;
+      --shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+      --radius-lg: 1rem;
+      --radius-md: 0.75rem;
+      --radius-sm: 0.6rem;
     }
 
-    * {
-      box-sizing: border-box;
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #050708;
+        --bg-panel: rgba(15, 23, 42, 0.96);
+        --bg-card: rgba(15, 23, 42, 0.96);
+        --bg-soft: #0b1220;
+        --text: #f5f5f5;
+        --text-muted: #9ca3af;
+        --border: rgba(55, 65, 81, 0.9);
+        --shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+      }
     }
+
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       padding: 0;
-      background-color: #050708;
-      color: #f5f5f5;
+      background: var(--bg);
+      color: var(--text);
     }
 
     .page {
@@ -30,144 +55,191 @@
     }
 
     header {
-      padding: 1.5rem 2rem 1rem 2rem;
-      border-bottom: 1px solid #222;
-      background: radial-gradient(circle at top left, #1e293b 0, #020617 55%);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-panel);
+      box-shadow: var(--shadow);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem 1.25rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.6rem 1rem;
     }
 
     .title {
-      font-size: 1.6rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      margin: 0 0 0.2rem 0;
+      font-size: 1.5rem;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+      margin: 0;
     }
 
     .subtitle {
       margin: 0;
       font-size: 0.95rem;
-      color: #9ca3af;
+      color: var(--text-muted);
     }
 
-    main {
-      flex: 1;
-      padding: 1rem 2rem 2rem 2rem;
+    .search-row {
       display: grid;
-      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 900px) {
-      main {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .panel {
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      border-radius: 0.9rem;
-      padding: 1.1rem 1.2rem 1.2rem 1.2rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
-    }
-
-    .panel h2 {
-      margin: 0 0 0.75rem 0;
-      font-size: 1.05rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #e5e7eb;
-    }
-
-    .input.row {
-      display: flex;
-      flex-direction: column;
+      grid-template-columns: 1fr auto;
       gap: 0.6rem;
+      align-items: center;
     }
 
-    label {
-      font-size: 0.9rem;
-      color: #d1d5db;
+    @media (max-width: 640px) {
+      .search-row {
+        grid-template-columns: 1fr;
+      }
     }
 
     input[type="text"] {
       width: 100%;
-      padding: 0.5rem 0.7rem;
-      border-radius: 0.6rem;
-      border: 1px solid #374151;
-      background-color: #020617;
-      color: #f9fafb;
-      font-size: 0.95rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      font-size: 1rem;
     }
 
     input[type="text"]:focus {
-      outline: 2px solid #38bdf8;
+      outline: 2px solid var(--accent);
       outline-offset: 1px;
-      border-color: #38bdf8;
+      border-color: var(--accent);
     }
 
     button {
-      margin-top: 0.4rem;
-      width: 100%;
-      padding: 0.55rem 0.7rem;
+      padding: 0.75rem 1.1rem;
       border: none;
-      border-radius: 0.6rem;
+      border-radius: var(--radius-sm);
       background: linear-gradient(to right, #22c55e, #16a34a);
       color: #f9fafb;
-      font-size: 0.95rem;
-      font-weight: 500;
+      font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     button:disabled {
-      opacity: 0.5;
+      opacity: 0.55;
       cursor: default;
     }
 
-    .status {
-      margin-top: 0.75rem;
-      font-size: 0.85rem;
-      color: #9ca3af;
-      white-space: pre-line;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    main {
+      flex: 1;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.1rem 1.25rem 2rem 1.25rem;
+      display: flex;
+      flex-direction: column;
       gap: 1rem;
     }
 
-    .card {
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid #1f2937;
-      border-radius: 0.9rem;
-      padding: 0.85rem 0.95rem 0.95rem 0.95rem;
-      min-height: 0;
+    .panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.1rem;
+      box-shadow: var(--shadow);
     }
 
-    .card h3 {
-      margin: 0 0 0.55rem 0;
+    .status {
       font-size: 0.95rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #e5e7eb;
+      color: var(--text-muted);
+      white-space: pre-line;
     }
+
+    .progress {
+      margin-top: 0.5rem;
+      padding: 0.75rem 0.9rem;
+      background: var(--bg-soft);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      white-space: pre-line;
+      display: none;
+    }
+
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 1rem;
+    }
+
+    details.section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 0.2rem 0.9rem 0.9rem 0.9rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    details.section summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 0.2rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      font-size: 1rem;
+    }
+
+    details.section summary::-webkit-details-marker { display: none; }
+
+    .summary-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .pill {
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .section-body { padding-top: 0.35rem; }
 
     .muted {
-      color: #9ca3af;
-      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.35;
     }
 
     .mono {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         "Liberation Mono", "Courier New", monospace;
-      font-size: 0.86rem;
+      font-size: 0.9rem;
     }
 
     .table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.82rem;
+      font-size: 0.88rem;
       table-layout: fixed;
       word-break: break-word;
       white-space: normal;
@@ -175,22 +247,46 @@
 
     .table th,
     .table td {
-      padding: 0.3rem 0.35rem;
-      border-bottom: 1px solid rgba(31, 41, 55, 0.95);
+      padding: 0.35rem 0.4rem;
+      border-bottom: 1px solid var(--border);
       vertical-align: top;
     }
 
     .table th {
       text-align: left;
-      font-weight: 600;
-      color: #e5e7eb;
+      font-weight: 700;
     }
 
     .section-heading {
-      margin: 0.6rem 0 0.25rem 0;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #d1d5db;
+      margin: 0.7rem 0 0.35rem 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .empty-wrap {
+      padding: 0.7rem 0.8rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    .empty-status {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .empty-funny {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .footer-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.6rem;
     }
   </style>
 </head>
@@ -199,52 +295,388 @@
   <div class="page">
 
     <header>
-      <div class="title">Home Area Checker</div>
-      <div class="subtitle">Enter a UK postcode or full address to generate a full area profile</div>
+      <div class="header-inner">
+        <div class="title-row">
+          <div class="title">Home Area Checker</div>
+          <div class="subtitle">Enter a UK postcode or full address to generate a full area profile</div>
+        </div>
+
+        <div class="search-row">
+          <input id="inputAddress" type="text" placeholder="e.g. SW1A 1AA">
+          <button id="runBtn">Run Analysis</button>
+        </div>
+
+        <div id="status" class="status"></div>
+        <div id="progress" class="progress"></div>
+      </div>
     </header>
 
     <main>
-      <div class="panel">
-        <h2>Search</h2>
-        <div class="input row">
-          <label for="inputAddress">Postcode or Address</label>
-          <input id="inputAddress" type="text" placeholder="e.g. SW1A 1AA">
-          <button id="runBtn">Run Analysis</button>
-          <div id="status" class="status"></div>
+      <div id="report" class="panel" style="display:none">
+        <div class="report-grid">
+
+          <details class="section" id="locationSection" open>
+            <summary>
+              <span>Location</span>
+              <span class="summary-right"><span id="locationPill" class="pill">Waiting</span></span>
+            </summary>
+            <div class="section-body" id="locationBody"></div>
+          </details>
+
+          <details class="section" id="imdSection">
+            <summary>
+              <span>Index of Multiple Deprivation</span>
+              <span class="summary-right"><span id="imdPill" class="pill">Waiting</span></span>
+            </summary>
+            <div class="section-body" id="imdBody"></div>
+          </details>
+
+          <details class="section" id="crimeSection">
+            <summary>
+              <span>Crime</span>
+              <span class="summary-right"><span id="crimePill" class="pill">Waiting</span></span>
+            </summary>
+            <div class="section-body" id="crimeBody"></div>
+          </details>
+
+          <details class="section" id="floodSection">
+            <summary>
+              <span>Flood Risk</span>
+              <span class="summary-right"><span id="floodPill" class="pill">Waiting</span></span>
+            </summary>
+            <div class="section-body" id="floodBody"></div>
+          </details>
+
+          <details class="section" id="schoolsSection">
+            <summary>
+              <span>Schools</span>
+              <span class="summary-right"><span id="schoolsPill" class="pill">Waiting</span></span>
+            </summary>
+            <div class="section-body" id="schoolsBody"></div>
+          </details>
+
+          <details class="section" id="shopsSection">
+            <summary>
+              <span>Shops</span>
+              <span class="summary-right"><span id="shopsPill" class="pill">Waiting</span></span>
+            </summary>
+            <div class="section-body" id="shopsBody"></div>
+          </details>
+
+          <details class="section" id="transportSection">
+            <summary>
+              <span>Transport</span>
+              <span class="summary-right"><span id="transportPill" class="pill">Waiting</span></span>
+            </summary>
+            <div class="section-body" id="transportBody"></div>
+          </details>
+
+          <details class="section" id="airSection">
+            <summary>
+              <span>Air Quality</span>
+              <span class="summary-right"><span id="airPill" class="pill">Waiting</span></span>
+            </summary>
+            <div class="section-body" id="airBody"></div>
+          </details>
+
+          <details class="section" id="censusSection">
+            <summary>
+              <span>Census 2021</span>
+              <span class="summary-right"><span id="censusPill" class="pill">Waiting</span></span>
+            </summary>
+            <div class="section-body" id="censusBody"></div>
+          </details>
+
+          <details class="section" id="notesSection">
+            <summary>
+              <span>Notes</span>
+              <span class="summary-right"><span id="notesPill" class="pill">Waiting</span></span>
+            </summary>
+            <div class="section-body" id="notesBody"></div>
+          </details>
+
         </div>
       </div>
 
-      <div id="report" class="panel" style="display:none">
-        <h2>Report</h2>
-
-        <div id="locationSection" class="card"></div>
-        <div id="imdSection" class="card"></div>
-
-        <div class="grid">
-          <div id="crimeSection" class="card"></div>
-          <div id="floodSection" class="card"></div>
-        </div>
-
-        <div class="grid">
-          <div id="schoolsSection" class="card"></div>
-          <div id="shopsSection" class="card"></div>
-          <div id="transportSection" class="card"></div>
-        </div>
-
-        <div id="airSection" class="card"></div>
-        <div id="censusSection" class="card"></div>
-        <div id="notesSection" class="card"></div>
+      <div class="footer-note">
+        Data sources include Postcodes.io, Police UK, Environment Agency, OpenStreetMap, LondonAir, Census 2021, and IoD 2025. Results are indicative only.
       </div>
     </main>
+
   </div>
 
 <script>
   const statusBox = document.getElementById("status");
+  const progressBox = document.getElementById("progress");
   const runBtn = document.getElementById("runBtn");
   const report = document.getElementById("report");
+  const API_BASE = "https://home-check-backend.onrender.com";
+
+  const sections = [
+    { key: "location", pill: "locationPill", body: "locationBody", title: "Location" },
+    { key: "imd", pill: "imdPill", body: "imdBody", title: "Index of Multiple Deprivation" },
+    { key: "crime", pill: "crimePill", body: "crimeBody", title: "Crime" },
+    { key: "flood", pill: "floodPill", body: "floodBody", title: "Flood Risk" },
+    { key: "schools", pill: "schoolsPill", body: "schoolsBody", title: "Schools" },
+    { key: "shops", pill: "shopsPill", body: "shopsBody", title: "Shops" },
+    { key: "transport", pill: "transportPill", body: "transportBody", title: "Transport" },
+    { key: "air_quality", pill: "airPill", body: "airBody", title: "Air Quality" },
+    { key: "census_2021", pill: "censusPill", body: "censusBody", title: "Census 2021" },
+    { key: "notes", pill: "notesPill", body: "notesBody", title: "Notes" }
+  ];
+
+  const progressMessages = {
+    start: [
+      "Warming up the kettle and waking the servers…",
+      "Right, off we go. Fetching the bits and bobs…",
+      "Backend is stretching its legs. Please stand by…",
+      "Starting the rummage through public data cupboards…"
+    ],
+    location: [
+      "Finding your postcode on the big map of Britain…",
+      "Asking Postcodes.io nicely where this place is…",
+      "Dropping a pin and pretending we know geography…",
+      "Locating you without using carrier pigeons…"
+    ],
+    imd: [
+      "Checking how posh or pants the area is, statistically…",
+      "Opening the deprivation ledger like a nosy neighbour…",
+      "Consulting IoD 2025 for a reality check…",
+      "Measuring local deprivation with all due respect…"
+    ],
+    crime: [
+      "Having a word with the Police API about recent mischief…",
+      "Counting crimes and clutching pearls responsibly…",
+      "Fetching the latest month of police stats…",
+      "Looking for shenanigans in the neighbourhood…"
+    ],
+    flood: [
+      "Asking the Environment Agency if you need wellies…",
+      "Scanning for flood warnings and soggy surprises…",
+      "Checking if the nearby river has ideas…",
+      "Consulting the nation’s puddle experts…"
+    ],
+    schools: [
+      "Hunting for schools within a sensible stroll…",
+      "Pairing GIAS schools with Ofsted gossip…",
+      "Looking up local schools and their report cards…",
+      "Seeing what’s nearby for the small humans…"
+    ],
+    shops: [
+      "Overpass API is off to the shops for you…",
+      "Looking for supermarkets and corner shops…",
+      "Asking OpenStreetMap where the biscuits live…",
+      "Checking for grocery options within a wander…"
+    ],
+    transport: [
+      "Finding nearby stations so you can escape quickly…",
+      "Poking OpenStreetMap for railway bits…",
+      "Looking for transport nodes and tube entrances…",
+      "Checking what you can walk to without a taxi…"
+    ],
+    air_quality: [
+      "Sniffing the air via LondonAir’s sensors…",
+      "Checking the nearest air monitor for grumbles…",
+      "Seeing what the air quality index thinks today…",
+      "Consulting LondonAir before you take a deep breath…"
+    ],
+    census_2021: [
+      "Unpacking Census 2021 like it’s Christmas data…",
+      "Calculating local demographics without judging…",
+      "Crunching census numbers gently and politely…",
+      "Seeing who lives nearby, in spreadsheet form…"
+    ],
+    notes: [
+      "Writing any final notes in neat handwriting…",
+      "Tidying up results and adding footnotes…",
+      "Wrapping it all up with a bow…",
+      "Putting the last bits on the report…"
+    ],
+    done: [
+      "All sorted. You’re good to go.",
+      "Report ready. Fancy a look?",
+      "Finished. No explosions detected.",
+      "Done and dusted."
+    ]
+  };
+
+  const emptyStates = {
+    location: {
+      okEmpty: [
+        { status: "Location found, but details are a bit thin", funny: "We know where it is, but the rest of the map is having a lie down." },
+        { status: "Postcode located, extra fields missing", funny: "Found the spot, but the paperwork went for a pint." }
+      ],
+      apiFail: [
+        { status: "Postcode API did not respond", funny: "Postcodes.io is sulking. Try again once it’s had its tea." },
+        { status: "Could not reach postcode service", funny: "The postcode elves are offline. Give it another whirl." }
+      ],
+      fileMissing: [
+        { status: "No local file needed for location", funny: "Nothing to load here. Carry on." },
+        { status: "No local file needed for location", funny: "This bit is purely API powered." }
+      ]
+    },
+
+    imd: {
+      okEmpty: [
+        { status: "IMD lookup worked, but no match for this LSOA", funny: "We asked the deprivation table politely, it shrugged." },
+        { status: "IMD data returned empty for this area", funny: "Either the area is off the charts or the chart’s off having biscuits." }
+      ],
+      apiFail: [
+        { status: "IMD uses local file, no API call here", funny: "Not an API problem. More of a filing cabinet situation." },
+        { status: "IMD uses local file, no API call here", funny: "This one’s on the spreadsheets, not the internet." }
+      ],
+      fileMissing: [
+        { status: "IMD Excel file not found on backend", funny: "The IoD 2025 file has done a runner. Backend needs it back." },
+        { status: "IMD file missing or unreadable", funny: "Can’t read the deprivation oracle without the sacred Excel." }
+      ]
+    },
+
+    crime: {
+      okEmpty: [
+        { status: "Police API worked, no crimes recorded for latest month", funny: "Either it’s lovely and quiet or everyone behaved for once." },
+        { status: "Crime API returned zero incidents", funny: "Nothing to see here. Even the hoodlums are on holiday." }
+      ],
+      apiFail: [
+        { status: "Police API timed out or unavailable", funny: "The Police API is stuck in traffic again. Try later." },
+        { status: "Could not reach Police UK service", funny: "Crime stats are playing hide and seek. Backend couldn’t catch them." }
+      ],
+      fileMissing: [
+        { status: "Crime uses API only, no local file", funny: "This one doesn’t need local files."
+        },
+        { status: "Crime uses API only, no local file", funny: "Pure internet magic for this bit." }
+      ]
+    },
+
+    flood: {
+      okEmpty: [
+        { status: "Flood API worked, no warnings within ten kilometres", funny: "No alerts nearby. Leave the wellies at home." },
+        { status: "Flood service responded with nothing relevant", funny: "Rivers seem calm. For now." }
+      ],
+      apiFail: [
+        { status: "Environment Agency API timed out or unavailable", funny: "Flood warnings are currently underwater. Try again soon." },
+        { status: "Could not reach flood monitoring service", funny: "Backend shouted into the void, the flood API didn’t shout back." }
+      ],
+      fileMissing: [
+        { status: "Flood uses API only, no local file", funny: "No files needed here." },
+        { status: "Flood uses API only, no local file", funny: "All online for this one." }
+      ]
+    },
+
+    schools: {
+      okEmpty: [
+        { status: "School lookup worked, none within one kilometre", funny: "Either it’s very peaceful or you’ve found a school free zone." },
+        { status: "Schools data loaded, but no nearby matches", funny: "GIAS found schools elsewhere, just not right here." }
+      ],
+      apiFail: [
+        { status: "Schools use local files, no API call here", funny: "Not an internet wobble. More a spreadsheet mood." },
+        { status: "Schools use local files, no API call here", funny: "Backend reads these from files." }
+      ],
+      fileMissing: [
+        { status: "GIAS or Ofsted CSV missing on backend", funny: "The school registers aren’t on the server. Backend needs the CSVs." },
+        { status: "Schools files missing or unreadable", funny: "Can’t judge schools without the Ofsted gossip files." }
+      ]
+    },
+
+    shops: {
+      okEmpty: [
+        { status: "OpenStreetMap worked, no grocery shops within one kilometre", funny: "Either you’re living off-grid or the shops are further than a lazy stroll." },
+        { status: "Shops lookup returned nothing nearby", funny: "No supermarkets spotted within range. Time to befriend a delivery van." }
+      ],
+      apiFail: [
+        { status: "OpenStreetMap Overpass timed out or unavailable", funny: "Overpass is having a nap. Try again when it wakes up." },
+        { status: "Could not reach Overpass API", funny: "Backend tried to ask the map, but it’s not picking up." }
+      ],
+      fileMissing: [
+        { status: "Shops use API only, no local file", funny: "No local files involved." },
+        { status: "Shops use API only, no local file", funny: "All map based for this one." }
+      ]
+    },
+
+    transport: {
+      okEmpty: [
+        { status: "OpenStreetMap worked, no stations within one kilometre", funny: "Looks like you’ll be walking a bit further before you hop on a train." },
+        { status: "Transport lookup returned no nearby rail stops", funny: "No stations close by. Perhaps you’ve discovered serenity." }
+      ],
+      apiFail: [
+        { status: "OpenStreetMap Overpass timed out or unavailable", funny: "The transport map is buffering like it’s 2006." },
+        { status: "Could not reach Overpass API", funny: "Backend couldn’t get a word out of the map service." }
+      ],
+      fileMissing: [
+        { status: "Transport uses API only, no local file", funny: "No local files needed." },
+        { status: "Transport uses API only, no local file", funny: "Pure Overpass for this one." }
+      ]
+    },
+
+    air_quality: {
+      okEmpty: [
+        { status: "LondonAir worked, but no recent index values", funny: "The air monitor is awake, but not in the mood to report." },
+        { status: "Air site found, pollutants list empty", funny: "Either the air is angelic or the sensor’s on a tea break." }
+      ],
+      apiFail: [
+        { status: "LondonAir API timed out or unavailable", funny: "LondonAir is huffing and puffing. Try again shortly." },
+        { status: "Could not reach LondonAir service", funny: "Backend waved at LondonAir, LondonAir waved back later." }
+      ],
+      fileMissing: [
+        { status: "LondonAir sites JSON missing on backend", funny: "No site list loaded. Backend needs the LondonAir sites file." },
+        { status: "Air sites file missing or unreadable", funny: "Can’t find a monitor without the monitor directory." }
+      ]
+    },
+
+    census_2021: {
+      okEmpty: [
+        { status: "Census files loaded, but no row for this LSOA", funny: "We went to the census party, your LSOA didn’t show." },
+        { status: "Census lookup returned nothing for this area", funny: "Either a data gap or the spreadsheet is being coy." }
+      ],
+      apiFail: [
+        { status: "Census uses local files, no API call here", funny: "Not an API issue. The numbers live on disk." },
+        { status: "Census uses local files, no API call here", funny: "Backend reads these from local CSVs." }
+      ],
+      fileMissing: [
+        { status: "One or more Census CSVs missing on backend", funny: "The census files aren’t on the server. Backend can’t do sums without them." },
+        { status: "Census files missing or unreadable", funny: "No spreadsheets, no demographics. Simple as." }
+      ]
+    },
+
+    notes: {
+      okEmpty: [
+        { status: "No extra notes were generated", funny: "Nothing to add. Consider that a blessing." },
+        { status: "Notes list empty", funny: "No stray thoughts from the backend this time." }
+      ],
+      apiFail: [
+        { status: "Notes are backend generated, no API", funny: "Not an API problem." },
+        { status: "Notes are backend generated, no API", funny: "This one’s internal." }
+      ],
+      fileMissing: [
+        { status: "Notes do not use local files", funny: "No files needed here." },
+        { status: "Notes do not use local files", funny: "Nothing missing for notes." }
+      ]
+    }
+  };
+
+  function pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
 
   function setStatus(text) {
     statusBox.textContent = text;
+  }
+
+  function showProgress(text) {
+    progressBox.style.display = "block";
+    progressBox.textContent = text;
+  }
+
+  function hideProgress() {
+    progressBox.style.display = "none";
+  }
+
+  function setPill(id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+
+  function resetPills() {
+    for (const s of sections) setPill(s.pill, "Waiting");
   }
 
   async function runAnalysis() {
@@ -253,11 +685,14 @@
       setStatus("Please enter an address.");
       return;
     }
-    setStatus("Processing…");
+
+    resetPills();
+    setStatus(pick(progressMessages.start));
+    showProgress("Backend waking up… if it’s on the free plan, it may shuffle in slowly.");
+
     runBtn.disabled = true;
 
     try {
-      const API_BASE = "https://home-check-backend.onrender.com";
       const response = await fetch(`${API_BASE}/analyse`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -268,25 +703,26 @@
         let msg = "Error from server: " + response.status;
         try {
           const errData = await response.json();
-          if (errData && errData.detail) {
-            msg = "Error: " + errData.detail;
-          }
-        } catch (e) {
-          // ignore JSON parse errors
-        }
+          if (errData && errData.detail) msg = "Error: " + errData.detail;
+        } catch (e) {}
         setStatus(msg);
+        hideProgress();
         runBtn.disabled = false;
         return;
       }
 
       const data = await response.json();
-      console.log("API response", data);
       setStatus("Done.");
+      hideProgress();
       renderReport(data);
       report.style.display = "block";
 
+      const reportTop = report.getBoundingClientRect().top + window.scrollY - 90;
+      window.scrollTo({ top: reportTop, behavior: "smooth" });
+
     } catch (err) {
       setStatus("Network error: " + err);
+      hideProgress();
     }
 
     runBtn.disabled = false;
@@ -294,27 +730,42 @@
 
   runBtn.addEventListener("click", runAnalysis);
   document.getElementById("inputAddress").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      runAnalysis();
-    }
+    if (e.key === "Enter") runAnalysis();
   });
 
   function renderReport(data) {
     try {
-      renderLocation(data.location);
-      renderIMD(data.imd);
-      renderCrime(data.crime);
-      renderFlood(data.flood);
-      renderSchools(data.schools);
-      renderShops(data.shops);
-      renderTransport(data.transport);
-      renderAir(data.air_quality);
-      renderCensus(data.census_2021);
-      renderNotes(data.notes);
+      progressStep("location");
+      renderLocation(data.location, data.errors || {});
+      progressStep("imd");
+      renderIMD(data.imd, data.errors || {});
+      progressStep("crime");
+      renderCrime(data.crime, data.errors || {});
+      progressStep("flood");
+      renderFlood(data.flood, data.errors || {});
+      progressStep("schools");
+      renderSchools(data.schools, data.errors || {});
+      progressStep("shops");
+      renderShops(data.shops, data.errors || {});
+      progressStep("transport");
+      renderTransport(data.transport, data.errors || {});
+      progressStep("air_quality");
+      renderAir(data.air_quality, data.errors || {});
+      progressStep("census_2021");
+      renderCensus(data.census_2021, data.errors || {});
+      progressStep("notes");
+      renderNotes(data.notes, data.errors || {});
+      showProgress(pick(progressMessages.done));
+      setTimeout(hideProgress, 1500);
     } catch (e) {
       setStatus("Render error: " + e);
       console.error(e);
     }
+  }
+
+  function progressStep(key) {
+    const msgs = progressMessages[key];
+    if (msgs) showProgress(pick(msgs));
   }
 
   function escape(val) {
@@ -325,14 +776,38 @@
       .replace(/>/g, "&gt;");
   }
 
-  function renderLocation(loc) {
-    const box = document.getElementById("locationSection");
-    if (!loc) {
-      box.innerHTML = "<h3>Location</h3><div class='muted'>No data</div>";
+  function emptyHTML(sectionKey, kind, explicitStatus) {
+    const bank = emptyStates[sectionKey];
+    const item = pick(bank[kind]);
+    const statusLine = explicitStatus || item.status;
+    return (
+      "<div class='empty-wrap'>" +
+        "<div class='empty-status'>" + escape(statusLine) + "</div>" +
+        "<div class='empty-funny'>" + escape(item.funny) + "</div>" +
+      "</div>"
+    );
+  }
+
+  function decideEmpty(sectionKey, errors, okEmptyCondition) {
+    const err = errors && errors[sectionKey];
+    if (err === "file_missing") return { kind: "fileMissing", status: null };
+    if (err === "api_unavailable") return { kind: "apiFail", status: null };
+    if (okEmptyCondition) return { kind: "okEmpty", status: null };
+    return null;
+  }
+
+  function renderLocation(loc, errors) {
+    setPill("locationPill", "Processing");
+    const box = document.getElementById("locationBody");
+
+    const empty = decideEmpty("location", errors, !loc);
+    if (empty) {
+      box.innerHTML = emptyHTML("location", empty.kind);
+      setPill("locationPill", "Empty");
       return;
     }
+
     box.innerHTML =
-      "<h3>Location</h3>" +
       "<div class='mono'>Postcode: " + escape(loc.postcode) + "</div>" +
       "<div class='mono'>Latitude: " + escape(loc.latitude) + "</div>" +
       "<div class='mono'>Longitude: " + escape(loc.longitude) + "</div>" +
@@ -340,134 +815,131 @@
       "<div class='mono'>MSOA: " + escape(loc.msoa || "Not available") + "</div>" +
       "<div class='mono'>District: " + escape(loc.admin_district) + "</div>" +
       "<div class='mono'>Region: " + escape(loc.region) + "</div>";
+
+    setPill("locationPill", "Done");
   }
 
-  function renderIMD(imd) {
-    const box = document.getElementById("imdSection");
-    if (!imd || !imd.scores) {
-      box.innerHTML = "<h3>IMD</h3><div class='muted'>No IMD data available</div>";
+  function renderIMD(imd, errors) {
+    setPill("imdPill", "Processing");
+    const box = document.getElementById("imdBody");
+
+    const okEmpty = !imd || !imd.scores || Object.keys(imd.scores).length === 0;
+    const empty = decideEmpty("imd", errors, okEmpty);
+    if (empty) {
+      box.innerHTML = emptyHTML("imd", empty.kind);
+      setPill("imdPill", "Empty");
       return;
     }
 
-    let html = "<h3>Index of Multiple Deprivation</h3>";
-    html += "<div class='mono'>LSOA: " + escape(imd.lsoa_code) + "</div>";
+    let html = "<div class='mono'>LSOA: " + escape(imd.lsoa_code) + "</div>";
     html += "<div class='mono'>Name: " + escape(imd.lsoa_name) + "</div>";
     html += "<table class='table'><tbody>";
 
     for (const key in imd.scores) {
       if (!Object.prototype.hasOwnProperty.call(imd.scores, key)) continue;
-      html += "<tr><td>" + escape(key) + "</td><td>" +
-        escape(imd.scores[key]) + "</td></tr>";
+      html += "<tr><td>" + escape(key) + "</td><td>" + escape(imd.scores[key]) + "</td></tr>";
     }
 
     html += "</tbody></table>";
     box.innerHTML = html;
+    setPill("imdPill", "Done");
   }
 
-  function renderCrime(crime) {
-    const box = document.getElementById("crimeSection");
+  function renderCrime(crime, errors) {
+    setPill("crimePill", "Processing");
+    const box = document.getElementById("crimeBody");
 
-    if (!crime) {
-      box.innerHTML = "<h3>Crime</h3><div class='muted'>No crime data.</div>";
+    const raw = crime && Array.isArray(crime.raw) ? crime.raw : [];
+    const summary = (crime && crime.summary) || {};
+    const total = summary.total || 0;
+
+    const okEmpty = (total === 0 && raw.length === 0);
+    const empty = decideEmpty("crime", errors, okEmpty);
+    if (empty) {
+      box.innerHTML = emptyHTML("crime", empty.kind);
+      setPill("crimePill", "Empty");
       return;
     }
 
-    const raw = Array.isArray(crime.raw) ? crime.raw : [];
-    const summary = crime.summary || {};
-    let total = summary.total;
     let byCat = summary.by_category || [];
 
-    if ((total === undefined || total === 0) && raw.length > 0) {
+    if (!byCat.length && raw.length > 0) {
       const counts = {};
       for (const c of raw) {
         const cat = (c.category || c.type || "unknown").toLowerCase();
         counts[cat] = (counts[cat] || 0) + 1;
       }
-      total = raw.length;
+      const t = raw.length;
       byCat = Object.entries(counts).map(([cat, count]) => ({
         category: cat,
         count,
-        percentage: (count / total) * 100.0
-      }));
-      byCat.sort((a, b) => b.count - a.count);
+        percentage: (count / t) * 100.0
+      })).sort((a, b) => b.count - a.count);
     }
 
-    if (!total) {
-      box.innerHTML =
-        "<h3>Crime</h3><div class='muted'>No crime records returned for the latest month by the Police API.</div>";
-      return;
-    }
-
-    let html = "<h3>Crime</h3>";
-    html += "<div class='mono'>Total crimes: " + escape(total) + "</div>";
+    let html = "<div class='mono'>Total crimes: " + escape(total || raw.length) + "</div>";
 
     if (!byCat.length) {
       html += "<div class='muted'>No breakdown by category.</div>";
       box.innerHTML = html;
+      setPill("crimePill", "Done");
       return;
     }
 
-    html += "<table class='table'><thead><tr>" +
-      "<th>Category</th><th>Count</th><th>%</th></tr></thead><tbody>";
+    html += "<table class='table'><thead><tr><th>Category</th><th>Count</th><th>%</th></tr></thead><tbody>";
 
     for (const item of byCat) {
       const name = item.category || item.name;
-      const pct = typeof item.percentage === "number"
-        ? item.percentage.toFixed(1)
-        : "";
-      html += "<tr><td>" + escape(name) + "</td>" +
-        "<td>" + escape(item.count) + "</td>" +
-        "<td>" + (pct ? pct + "%" : "") + "</td></tr>";
+      const pct = typeof item.percentage === "number" ? item.percentage.toFixed(1) : "";
+      html += "<tr><td>" + escape(name) + "</td><td>" + escape(item.count) + "</td><td>" + (pct ? pct + "%" : "") + "</td></tr>";
     }
 
     html += "</tbody></table>";
     box.innerHTML = html;
+    setPill("crimePill", "Done");
   }
 
-  function renderFlood(flood) {
-    const box = document.getElementById("floodSection");
+  function renderFlood(flood, errors) {
+    setPill("floodPill", "Processing");
+    const box = document.getElementById("floodBody");
 
-    if (!flood || !Array.isArray(flood.warnings) || flood.warnings.length === 0) {
-      box.innerHTML = "<h3>Flood Risk</h3><div class='muted'>No current flood warnings within ten kilometres.</div>";
+    const warnings = flood && Array.isArray(flood.warnings) ? flood.warnings : [];
+    const okEmpty = warnings.length === 0;
+    const empty = decideEmpty("flood", errors, okEmpty);
+    if (empty) {
+      box.innerHTML = emptyHTML("flood", empty.kind);
+      setPill("floodPill", "Empty");
       return;
     }
 
-    let html = "<h3>Flood Risk</h3>";
-    for (const w of flood.warnings) {
+    let html = "";
+    for (const w of warnings) {
       html += "<div class='section-heading'>" + escape(w.severity || "Warning") + "</div>";
-      if (w.description) {
-        html += "<div class='mono'>" + escape(w.description) + "</div>";
-      }
-      if (w.message) {
-        html += "<div class='mono'>" + escape(w.message) + "</div>";
-      }
-      if (typeof w.distance_km === "number") {
-        html += "<div class='mono'>Distance: " + w.distance_km.toFixed(1) + " km</div>";
-      }
-      if (w.time_raised) {
-        html += "<div class='mono'>Raised: " + escape(w.time_raised) + "</div>";
-      }
-      if (w.time_severity_changed) {
-        html += "<div class='mono'>Updated: " + escape(w.time_severity_changed) + "</div>";
-      }
+      if (w.description) html += "<div class='mono'>" + escape(w.description) + "</div>";
+      if (w.message) html += "<div class='mono'>" + escape(w.message) + "</div>";
+      if (typeof w.distance_km === "number") html += "<div class='mono'>Distance: " + w.distance_km.toFixed(1) + " km</div>";
+      if (w.time_raised) html += "<div class='mono'>Raised: " + escape(w.time_raised) + "</div>";
+      if (w.time_severity_changed) html += "<div class='mono'>Updated: " + escape(w.time_severity_changed) + "</div>";
       html += "<hr>";
     }
 
     box.innerHTML = html;
+    setPill("floodPill", "Done");
   }
 
-  function renderSchools(schools) {
-    const box = document.getElementById("schoolsSection");
+  function renderSchools(schools, errors) {
+    setPill("schoolsPill", "Processing");
+    const box = document.getElementById("schoolsBody");
 
     let list = [];
-    if (Array.isArray(schools)) {
-      list = schools;
-    } else if (schools && Array.isArray(schools.items)) {
-      list = schools.items;
-    }
+    if (Array.isArray(schools)) list = schools;
+    else if (schools && Array.isArray(schools.items)) list = schools.items;
 
-    if (!list.length) {
-      box.innerHTML = "<h3>Schools</h3><div class='muted'>No schools found within the search radius.</div>";
+    const okEmpty = list.length === 0;
+    const empty = decideEmpty("schools", errors, okEmpty);
+    if (empty) {
+      box.innerHTML = emptyHTML("schools", empty.kind);
+      setPill("schoolsPill", "Empty");
       return;
     }
 
@@ -477,36 +949,22 @@
       return da - db;
     });
 
-    let html = "<h3>Schools</h3>";
-    html += "<div class='muted'>Showing schools within about one kilometre.</div>";
-
-    html += "<table class='table'><thead><tr>" +
-      "<th>Name</th><th>Distance</th><th>Phase</th><th>Ofsted overall</th>" +
-      "</tr></thead><tbody>";
+    let html = "<div class='muted'>Showing schools within about one kilometre.</div>";
+    html += "<table class='table'><thead><tr><th>Name</th><th>Distance</th><th>Phase</th><th>Ofsted overall</th></tr></thead><tbody>";
 
     const ofstedDetails = [];
-
     for (const s of list.slice(0, 25)) {
-      const dist = typeof s.distance_km === "number"
-        ? s.distance_km.toFixed(2) + " km"
-        : "";
+      const dist = typeof s.distance_km === "number" ? s.distance_km.toFixed(2) + " km" : "";
       const phase = s.phase || s.school_phase || "";
       const ofsted = s.ofsted || {};
-      const ofstedOverall =
-        ofsted["Overall effectiveness"] || ofsted.overall_effectiveness || "Not recorded";
-
+      const ofstedOverall = ofsted["Overall effectiveness"] || ofsted.overall_effectiveness || "Not recorded";
       const name = s.name || s.establishment_name || "School";
 
-      html += "<tr><td>" + escape(name) + "</td>" +
-        "<td>" + escape(dist) + "</td>" +
-        "<td>" + escape(phase) + "</td>" +
-        "<td>" + escape(ofstedOverall) + "</td></tr>";
-
+      html += "<tr><td>" + escape(name) + "</td><td>" + escape(dist) + "</td><td>" + escape(phase) + "</td><td>" + escape(ofstedOverall) + "</td></tr>";
       ofstedDetails.push({ name, ofsted });
     }
 
     html += "</tbody></table>";
-
     html += "<div class='section-heading'>Ofsted detail</div>";
 
     const fields = [
@@ -522,52 +980,46 @@
     ];
 
     for (const entry of ofstedDetails) {
-      const name = entry.name;
-      const ofsted = entry.ofsted || {};
-      html += "<div class='mono' style='margin-top:0.4rem;'>" + escape(name) + "</div>";
-      if (!ofsted || Object.keys(ofsted).length === 0) {
+      html += "<div class='mono' style='margin-top:0.4rem;'>" + escape(entry.name) + "</div>";
+      if (!entry.ofsted || Object.keys(entry.ofsted).length === 0) {
         html += "<div class='muted'>No Ofsted record found for this school.</div>";
         continue;
       }
       html += "<table class='table'><tbody>";
       for (const field of fields) {
-        const value = ofsted[field] != null ? ofsted[field] : "";
+        const value = entry.ofsted[field] != null ? entry.ofsted[field] : "";
         html += "<tr><td>" + escape(field) + "</td><td>" + escape(value) + "</td></tr>";
       }
       html += "</tbody></table>";
     }
 
     box.innerHTML = html;
+    setPill("schoolsPill", "Done");
   }
 
-  function renderShops(shops) {
-    const box = document.getElementById("shopsSection");
+  function renderShops(shops, errors) {
+    setPill("shopsPill", "Processing");
+    const box = document.getElementById("shopsBody");
 
     let items = [];
-    if (Array.isArray(shops)) {
-      items = shops;
-    } else if (shops && Array.isArray(shops.places)) {
-      items = shops.places;
-    }
+    if (Array.isArray(shops)) items = shops;
+    else if (shops && Array.isArray(shops.places)) items = shops.places;
 
-    if (!items.length) {
-      box.innerHTML = "<h3>Shops</h3><div class='muted'>No nearby grocery shops or supermarkets returned. This can happen if OpenStreetMap is slow or temporarily unavailable. Try again in a minute.</div>";
+    const okEmpty = items.length === 0;
+    const empty = decideEmpty("shops", errors, okEmpty);
+    if (empty) {
+      box.innerHTML = emptyHTML("shops", empty.kind);
+      setPill("shopsPill", "Empty");
       return;
     }
 
-    const wantedShops = new Set([
-      "supermarket",
-      "convenience",
-      "grocery",
-      "greengrocer"
-    ]);
+    const wantedShops = new Set(["supermarket", "convenience", "grocery", "greengrocer"]);
 
     const filtered = [];
     for (const s of items) {
       const tags = s.tags || {};
       const kind = tags.shop || tags.amenity || "";
-      if (!kind || !wantedShops.has(kind)) continue;
-      filtered.push(s);
+      if (kind && wantedShops.has(kind)) filtered.push(s);
     }
 
     let list = filtered.length ? filtered : items;
@@ -589,37 +1041,37 @@
     }
 
     if (!unique.length) {
-      box.innerHTML = "<h3>Shops</h3><div class='muted'>No nearby grocery shops or supermarkets returned. This can happen if OpenStreetMap is slow or temporarily unavailable. Try again in a minute.</div>";
+      box.innerHTML = emptyHTML("shops", "okEmpty", "OpenStreetMap worked, but no grocery shops were tagged as such nearby");
+      setPill("shopsPill", "Empty");
       return;
     }
 
-    let html = "<h3>Shops</h3><ul>";
+    let html = "<ul>";
     for (const s of unique.slice(0, 25)) {
       const name = s.name || (s.tags && (s.tags.name || s.tags.shop)) || "Shop";
-      const distStr =
-        typeof s.distance_km === "number" ? " (" + s.distance_km.toFixed(2) + " km)" : "";
+      const distStr = typeof s.distance_km === "number" ? " (" + s.distance_km.toFixed(2) + " km)" : "";
       html += "<li class='mono'>" + escape(name) + escape(distStr) + "</li>";
     }
-    if (unique.length > 25) {
-      html += "<li class='muted'>+" + escape(unique.length - 25) + " more…</li>";
-    }
+    if (unique.length > 25) html += "<li class='muted'>+" + escape(unique.length - 25) + " more…</li>";
     html += "</ul>";
 
     box.innerHTML = html;
+    setPill("shopsPill", "Done");
   }
 
-  function renderTransport(transport) {
-    const box = document.getElementById("transportSection");
+  function renderTransport(transport, errors) {
+    setPill("transportPill", "Processing");
+    const box = document.getElementById("transportBody");
 
     let items = [];
-    if (Array.isArray(transport)) {
-      items = transport;
-    } else if (transport && Array.isArray(transport.nodes)) {
-      items = transport.nodes;
-    }
+    if (Array.isArray(transport)) items = transport;
+    else if (transport && Array.isArray(transport.nodes)) items = transport.nodes;
 
-    if (!items.length) {
-      box.innerHTML = "<h3>Transport</h3><div class='muted'>No nearby transport nodes returned. If this seems wrong, try again in a minute. OpenStreetMap sometimes times out.</div>";
+    const okEmpty = items.length === 0;
+    const empty = decideEmpty("transport", errors, okEmpty);
+    if (empty) {
+      box.innerHTML = emptyHTML("transport", empty.kind);
+      setPill("transportPill", "Empty");
       return;
     }
 
@@ -641,123 +1093,110 @@
       unique.push({ ...t, name });
     }
 
-    let html = "<h3>Transport</h3><ul>";
+    let html = "<ul>";
     for (const t of unique.slice(0, 25)) {
       const name = t.name || (t.tags && (t.tags.name || t.tags.railway || t.tags.highway)) || "Stop";
-      const mode =
-        t.mode ||
-        (t.tags && (t.tags.public_transport || t.tags.railway || t.tags.highway)) ||
-        "";
-      const distStr =
-        typeof t.distance_km === "number" ? " " + t.distance_km.toFixed(2) + " km" : "";
-      html += "<li class='mono'>" + escape(name) +
-        (mode ? " [" + escape(mode) + "]" : "") +
-        escape(distStr) + "</li>";
+      const mode = t.mode || (t.tags && (t.tags.public_transport || t.tags.railway || t.tags.highway)) || "";
+      const distStr = typeof t.distance_km === "number" ? " " + t.distance_km.toFixed(2) + " km" : "";
+      html += "<li class='mono'>" + escape(name) + (mode ? " [" + escape(mode) + "]" : "") + escape(distStr) + "</li>";
     }
-    if (unique.length > 25) {
-      html += "<li class='muted'>+" + escape(unique.length - 25) + " more…</li>";
-    }
+    if (unique.length > 25) html += "<li class='muted'>+" + escape(unique.length - 25) + " more…</li>";
     html += "</ul>";
 
     box.innerHTML = html;
+    setPill("transportPill", "Done");
   }
 
-  function renderAir(air) {
-    const box = document.getElementById("airSection");
+  function renderAir(air, errors) {
+    setPill("airPill", "Processing");
+    const box = document.getElementById("airBody");
 
-    if (!air) {
-      box.innerHTML = "<h3>Air Quality</h3><div class='muted'>No air quality data.</div>";
+    const site = air && (air.site || air.nearest_site) ? (air.site || air.nearest_site) : null;
+    const okEmpty = !site;
+    const empty = decideEmpty("air_quality", errors, okEmpty);
+    if (empty) {
+      box.innerHTML = emptyHTML("air_quality", empty.kind);
+      setPill("airPill", "Empty");
       return;
     }
 
-    const site = air.site || air.nearest_site || null;
-    if (!site) {
-      box.innerHTML = "<h3>Air Quality</h3><div class='muted'>No nearby monitoring site found.</div>";
-      return;
-    }
-
-    let html = "<h3>Air Quality</h3>";
-    html += "<div class='mono'>Site: " + escape(site.name || site.SiteName || site.code) + "</div>";
-
-    if (typeof site.distance_km === "number") {
-      html += "<div class='mono'>Distance: " + site.distance_km.toFixed(2) + " km</div>";
-    }
+    let html = "<div class='mono'>Site: " + escape(site.name || site.SiteName || site.code) + "</div>";
+    if (typeof site.distance_km === "number") html += "<div class='mono'>Distance: " + site.distance_km.toFixed(2) + " km</div>";
 
     const index = air.index || {};
     const pollutants = index.pollutants || index.entries || [];
 
     if (!Array.isArray(pollutants) || pollutants.length === 0) {
-      html += "<div class='muted'>No recent index values.</div>";
-      box.innerHTML = html;
+      box.innerHTML = emptyHTML("air_quality", "okEmpty", "LondonAir worked, but returned no recent pollutant indices");
+      setPill("airPill", "Empty");
       return;
     }
 
-    html += "<table class='table'><thead><tr>" +
-      "<th>Pollutant</th><th>Index</th><th>Band</th></tr></thead><tbody>";
-
+    html += "<table class='table'><thead><tr><th>Pollutant</th><th>Index</th><th>Band</th></tr></thead><tbody>";
     for (const p of pollutants) {
       const name = p.name || p.Pollutant || p.code;
-      html += "<tr><td>" + escape(name) + "</td>" +
-        "<td>" + escape(p.index || p.Index) + "</td>" +
-        "<td>" + escape(p.band || p.Band) + "</td></tr>";
+      html += "<tr><td>" + escape(name) + "</td><td>" + escape(p.index || p.Index) + "</td><td>" + escape(p.band || p.Band) + "</td></tr>";
     }
-
     html += "</tbody></table>";
+
     box.innerHTML = html;
+    setPill("airPill", "Done");
   }
 
-  function renderCensus(census) {
-    const box = document.getElementById("censusSection");
+  function renderCensus(census, errors) {
+    setPill("censusPill", "Processing");
+    const box = document.getElementById("censusBody");
 
-    if (!census || typeof census !== "object") {
-      box.innerHTML = "<h3>Census 2021</h3><div class='muted'>No Census data.</div>";
+    const okEmpty = !census || typeof census !== "object";
+    const empty = decideEmpty("census_2021", errors, okEmpty);
+    if (empty) {
+      box.innerHTML = emptyHTML("census_2021", empty.kind);
+      setPill("censusPill", "Empty");
       return;
     }
 
-    let html = "<h3>Census 2021</h3>";
-
+    let html = "";
     const categories = ["age", "ethnicity", "household", "occupation", "qualification", "religion"];
+
     for (const key of categories) {
       const entry = census[key];
-      html += "<div class='section-heading'>" +
-        key.charAt(0).toUpperCase() + key.slice(1) + "</div>";
+      html += "<div class='section-heading'>" + key.charAt(0).toUpperCase() + key.slice(1) + "</div>";
 
       if (!entry || !Array.isArray(entry.breakdown) || entry.breakdown.length === 0) {
-        html += "<div class='muted'>No data for this category.</div>";
+        html += emptyHTML("census_2021", "okEmpty", "Census files loaded, but returned no breakdown for " + key);
         continue;
       }
 
-      html += "<table class='table'><thead><tr>" +
-        "<th>Label</th><th>Count</th><th>%</th></tr></thead><tbody>";
-
+      html += "<table class='table'><thead><tr><th>Label</th><th>Count</th><th>%</th></tr></thead><tbody>";
       for (const row of entry.breakdown.slice(0, 25)) {
         const pct = typeof row.percentage === "number" ? row.percentage.toFixed(1) : "";
-        html += "<tr><td>" + escape(row.label) + "</td>" +
-          "<td>" + escape(row.count) + "</td>" +
-          "<td>" + (pct ? pct + "%" : "") + "</td></tr>";
+        html += "<tr><td>" + escape(row.label) + "</td><td>" + escape(row.count) + "</td><td>" + (pct ? pct + "%" : "") + "</td></tr>";
       }
-
       html += "</tbody></table>";
     }
 
     box.innerHTML = html;
+    setPill("censusPill", "Done");
   }
 
-  function renderNotes(notes) {
-    const box = document.getElementById("notesSection");
+  function renderNotes(notes, errors) {
+    setPill("notesPill", "Processing");
+    const box = document.getElementById("notesBody");
 
-    if (!Array.isArray(notes) || notes.length === 0) {
-      box.innerHTML = "<h3>Notes</h3><div class='muted'>No additional notes recorded.</div>";
+    const okEmpty = !Array.isArray(notes) || notes.length === 0;
+    const empty = decideEmpty("notes", errors, okEmpty);
+    if (empty) {
+      box.innerHTML = emptyHTML("notes", empty.kind);
+      setPill("notesPill", "Empty");
       return;
     }
 
-    let html = "<h3>Notes</h3><ul>";
-    for (const n of notes) {
-      html += "<li class='mono'>" + escape(n) + "</li>";
-    }
+    let html = "<ul>";
+    for (const n of notes) html += "<li class='mono'>" + escape(n) + "</li>";
     html += "</ul>";
 
     box.innerHTML = html;
+    setPill("notesPill", "Done");
   }
 </script>
 </body>
