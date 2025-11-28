@@ -412,6 +412,41 @@
   const report = document.getElementById("report");
   const API_BASE = "https://home-check-backend.onrender.com";
 
+  let fakeProgressTimer = null;
+  let fakeProgressIndex = 0;
+  const fakeProgressOrder = [
+    "start",
+    "location",
+    "imd",
+    "crime",
+    "flood",
+    "schools",
+    "shops",
+    "transport",
+    "air_quality",
+    "census_2021",
+    "notes"
+  ];
+
+  function startFakeProgress() {
+    stopFakeProgress();
+    fakeProgressIndex = 0;
+    showProgress(pick(progressMessages.start));
+    fakeProgressTimer = setInterval(() => {
+      fakeProgressIndex = (fakeProgressIndex + 1) % fakeProgressOrder.length;
+      const key = fakeProgressOrder[fakeProgressIndex];
+      const msgs = progressMessages[key] || progressMessages.start;
+      showProgress(pick(msgs));
+    }, 2500);
+  }
+
+  function stopFakeProgress() {
+    if (fakeProgressTimer) {
+      clearInterval(fakeProgressTimer);
+      fakeProgressTimer = null;
+    }
+  }
+
   const sections = [
     { key: "location", pill: "locationPill", body: "locationBody", title: "Location" },
     { key: "imd", pill: "imdPill", body: "imdBody", title: "Index of Multiple Deprivation" },
@@ -688,7 +723,7 @@
 
     resetPills();
     setStatus(pick(progressMessages.start));
-    showProgress("Backend waking up… if it’s on the free plan, it may shuffle in slowly.");
+    startFakeProgress();
 
     runBtn.disabled = true;
 
@@ -706,6 +741,7 @@
           if (errData && errData.detail) msg = "Error: " + errData.detail;
         } catch (e) {}
         setStatus(msg);
+        stopFakeProgress();
         hideProgress();
         runBtn.disabled = false;
         return;
@@ -713,6 +749,7 @@
 
       const data = await response.json();
       setStatus("Done.");
+      stopFakeProgress();
       hideProgress();
       renderReport(data);
       report.style.display = "block";
@@ -722,6 +759,7 @@
 
     } catch (err) {
       setStatus("Network error: " + err);
+      stopFakeProgress();
       hideProgress();
     }
 
